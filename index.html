@@ -2115,11 +2115,14 @@ function applyDemoShot(){
   if (floralEl) floralEl.classList.add('open');
 
   if (shot === 'dims'){
-    requestAnimationFrame(() => {
+    setTimeout(() => {
       const dimsEl = document.querySelector('.dims');
       const head = dimsEl ? dimsEl.previousElementSibling : null;
-      if (head) window.scrollTo({ top: head.offsetTop - 96, behavior: 'auto' });
-    });
+      if (head) {
+        const top = head.getBoundingClientRect().top + window.scrollY - 92;
+        window.scrollTo(0, top);
+      }
+    }, 260);
   }
   return true;
 }

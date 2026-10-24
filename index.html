@@ -1,0 +1,2134 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>珈琲手帖 · 小白也能写的咖啡品鉴</title>
+<style>
+/* ============ 设计变量 ============ */
+:root{
+  --paper:#FAF7F0;
+  --paper-2:#F4EFE5;
+  --card:#FFFDF8;
+  --ink:#3B342C;
+  --ink-2:#6F665C;
+  --ink-3:#A79C8E;
+  --line:#E7DFD0;
+  --matcha:#7D9B7A;
+  --matcha-deep:#5C7A59;
+  --matcha-soft:#EDF2E8;
+  --wood:#B08A66;
+  --radius:18px;
+  --shadow:0 2px 12px rgba(88, 72, 50, .05);
+  --shadow-hover:0 10px 26px rgba(88, 72, 50, .10);
+  --serif:"Songti SC","STSong","Noto Serif SC","SimSun",serif;
+  --sans:"PingFang SC","Hiragino Sans GB","Microsoft YaHei",system-ui,sans-serif;
+}
+
+*{box-sizing:border-box;margin:0;padding:0;}
+
+body{
+  font-family:var(--sans);
+  font-size:15px;
+  line-height:1.7;
+  color:var(--ink);
+  background:
+    radial-gradient(1100px 520px at 50% -220px, #FFFDF7 0%, rgba(255,253,247,0) 72%),
+    var(--paper);
+  -webkit-font-smoothing:antialiased;
+  min-height:100vh;
+}
+
+button{font-family:inherit;cursor:pointer;border:0;background:none;color:inherit;}
+input,textarea{font-family:inherit;font-size:15px;color:var(--ink);}
+
+.page{
+  max-width:1080px;
+  margin:0 auto;
+  padding:0 24px;
+  display:flex;
+  flex-direction:column;
+  min-height:100vh;
+}
+
+/* ============ 顶栏 ============ */
+.topbar{
+  position:sticky;
+  top:0;
+  z-index:30;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:16px;
+  padding:18px 0;
+  background:rgba(250,247,240,.88);
+  backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--line);
+}
+
+.brand{display:flex;align-items:center;gap:12px;color:inherit;text-decoration:none;}
+.brand:hover .mark{background:#E4EDDF;}
+
+.mark{
+  width:38px;height:38px;
+  display:grid;place-items:center;
+  border-radius:50%;
+  border:1px solid var(--matcha);
+  color:var(--matcha-deep);
+  font-family:var(--serif);
+  font-size:18px;
+  background:var(--matcha-soft);
+  flex:none;
+}
+
+.brand-text{display:flex;flex-direction:column;line-height:1.25;}
+.brand-text strong{font-family:var(--serif);font-size:17px;letter-spacing:.14em;font-weight:600;}
+.brand-text em{font-style:normal;font-size:10px;letter-spacing:.22em;color:var(--ink-3);text-transform:uppercase;}
+
+.nav{display:flex;gap:6px;}
+.nav-btn{
+  padding:8px 16px;
+  border-radius:999px;
+  font-size:13px;
+  color:var(--ink-2);
+  letter-spacing:.06em;
+  transition:background .18s ease, color .18s ease;
+}
+.nav-btn:hover{background:var(--paper-2);}
+.nav-btn.active{background:var(--matcha);color:#fff;}
+
+/* ============ 主区 ============ */
+main{flex:1;padding:44px 0 72px;}
+
+.view{animation:fadeUp .38s ease both;}
+@keyframes fadeUp{
+  from{opacity:0;transform:translateY(10px);}
+  to{opacity:1;transform:none;}
+}
+
+.eyebrow{
+  font-size:11px;
+  letter-spacing:.3em;
+  color:var(--ink-3);
+  text-transform:uppercase;
+  margin-bottom:12px;
+}
+
+h2.title{
+  font-family:var(--serif);
+  font-size:30px;
+  font-weight:600;
+  letter-spacing:.04em;
+  line-height:1.45;
+}
+
+.lede{
+  margin-top:12px;
+  color:var(--ink-2);
+  font-size:14px;
+  max-width:46ch;
+}
+
+.muted{color:var(--ink-3);font-size:13px;}
+
+/* ============ 首页 ============ */
+.hero{margin-bottom:38px;}
+.hero .rule{
+  display:flex;align-items:center;gap:10px;
+  margin-top:22px;color:var(--ink-3);font-size:11px;letter-spacing:.24em;
+}
+.hero .rule::before,.hero .rule::after{
+  content:"";height:1px;flex:1;background:var(--line);
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(232px,1fr));
+  gap:16px;
+}
+
+.bean-card{
+  position:relative;
+  text-align:left;
+  padding:22px 20px 20px;
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  box-shadow:var(--shadow);
+  transition:transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+  overflow:hidden;
+}
+.bean-card::after{
+  content:"";
+  position:absolute;
+  inset:auto 0 0 0;
+  height:3px;
+  background:var(--tone);
+  opacity:0;
+  transition:opacity .2s ease;
+}
+.bean-card:hover{
+  transform:translateY(-4px);
+  box-shadow:var(--shadow-hover);
+  border-color:#DCD2BF;
+}
+.bean-card:hover::after{opacity:1;}
+
+.bean-top{display:flex;align-items:center;gap:8px;margin-bottom:14px;}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--tone);}
+.bean-type{font-size:11px;letter-spacing:.16em;color:var(--ink-3);}
+
+.bean-card h3{
+  font-family:var(--serif);
+  font-size:20px;
+  font-weight:600;
+  letter-spacing:.03em;
+  line-height:1.35;
+}
+.bean-en{
+  font-size:11px;
+  letter-spacing:.12em;
+  color:var(--ink-3);
+  margin-top:2px;
+  text-transform:uppercase;
+}
+.bean-note{
+  margin-top:12px;
+  font-size:13px;
+  color:var(--ink-2);
+  line-height:1.6;
+  min-height:42px;
+}
+.bean-hints{display:flex;flex-wrap:wrap;gap:6px;margin-top:14px;}
+.mini-tag{
+  font-size:11px;
+  padding:3px 9px;
+  border-radius:999px;
+  color:var(--ink-2);
+  background:var(--paper-2);
+}
+
+.add-card{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  padding:26px 20px;
+  border:1px dashed #D6CBB7;
+  border-radius:var(--radius);
+  color:var(--ink-2);
+  font-size:14px;
+  letter-spacing:.04em;
+  transition:background .2s ease, border-color .2s ease, color .2s ease;
+}
+.add-card:hover{background:#FFFCF5;border-color:var(--matcha);color:var(--matcha-deep);}
+
+/* ============ 品鉴页 ============ */
+.back{
+  display:inline-flex;align-items:center;gap:8px;
+  font-size:13px;color:var(--ink-3);
+  margin-bottom:26px;letter-spacing:.06em;
+  transition:color .18s ease;
+}
+.back:hover{color:var(--matcha-deep);}
+
+.taste-head{margin-bottom:38px;}
+.taste-head h2{font-family:var(--serif);font-size:32px;font-weight:600;letter-spacing:.03em;line-height:1.3;}
+.taste-head .meta{margin-top:6px;font-size:13px;color:var(--ink-2);}
+.hint-row{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:16px;}
+.hint-row .label{font-size:11px;letter-spacing:.2em;color:var(--ink-3);}
+
+/* 分区标题 */
+.step-head{
+  display:flex;
+  align-items:flex-start;
+  gap:14px;
+  margin:38px 0 18px;
+  padding-top:20px;
+  border-top:1px solid var(--line);
+}
+.step-no{
+  font-family:var(--serif);
+  font-size:13px;
+  color:var(--matcha);
+  letter-spacing:.1em;
+  padding-top:5px;
+}
+.step-body h3{
+  font-family:var(--serif);
+  font-size:20px;
+  font-weight:600;
+  letter-spacing:.04em;
+  line-height:1.4;
+}
+.step-body p{font-size:12px;color:var(--ink-3);margin-top:3px;}
+
+/* --- 风味族 --- */
+.fam{
+  border:1px solid var(--line);
+  border-radius:14px;
+  background:var(--card);
+  margin-bottom:10px;
+  overflow:hidden;
+  transition:border-color .2s ease, box-shadow .2s ease;
+}
+.fam.open{border-color:#D8CDBB;box-shadow:var(--shadow);}
+.fam.has{border-color:var(--tone);}
+
+.fam-head{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  width:100%;
+  padding:14px 16px;
+  text-align:left;
+}
+.swatch{
+  width:22px;height:22px;
+  border-radius:7px;
+  background:var(--tone);
+  flex:none;
+  transition:transform .2s ease;
+}
+.fam.open .swatch{transform:rotate(-8deg) scale(1.06);}
+.fam-title{display:flex;flex-direction:column;line-height:1.35;flex:none;}
+.fam-name{font-size:14px;letter-spacing:.04em;}
+.fam-en{font-size:10px;letter-spacing:.14em;color:var(--ink-3);text-transform:uppercase;}
+.fam-hint{
+  flex:1;
+  font-size:12px;
+  color:var(--ink-3);
+  letter-spacing:.02em;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+.fam-badge{
+  min-width:22px;height:22px;
+  padding:0 7px;
+  display:grid;place-items:center;
+  border-radius:999px;
+  background:var(--paper-2);
+  color:var(--ink-3);
+  font-size:11px;
+  flex:none;
+  transition:background .2s ease, color .2s ease;
+}
+.fam.has .fam-badge{background:var(--tone);color:#fff;}
+.arrow{font-size:10px;color:var(--ink-3);transition:transform .2s ease;flex:none;}
+.fam.open .arrow{transform:rotate(180deg);}
+
+.fam-body{
+  display:none;
+  padding:2px 16px 16px;
+}
+.fam.open .fam-body{display:block;}
+
+.group{margin-top:10px;}
+.group-name{
+  font-size:10px;
+  letter-spacing:.2em;
+  color:var(--ink-3);
+  margin-bottom:7px;
+}
+.group-words{display:flex;flex-wrap:wrap;gap:7px;}
+
+.word{
+  padding:6px 13px;
+  border-radius:999px;
+  border:1px solid var(--line);
+  background:#fff;
+  color:var(--ink-2);
+  font-size:13px;
+  letter-spacing:.04em;
+  transition:all .18s ease;
+}
+.word:hover{border-color:var(--tone);color:var(--ink);}
+.word.on{
+  background:var(--tone);
+  border-color:var(--tone);
+  color:#fff;
+  transform:translateY(-1px);
+}
+
+/* --- 口感选择题 --- */
+.dim{
+  padding:18px 20px;
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:14px;
+  margin-bottom:10px;
+}
+.dim-q{
+  display:flex;
+  align-items:baseline;
+  gap:10px;
+  margin-bottom:12px;
+}
+.dim-name{
+  font-size:11px;
+  letter-spacing:.16em;
+  color:var(--matcha-deep);
+  background:var(--matcha-soft);
+  padding:3px 10px;
+  border-radius:999px;
+  flex:none;
+}
+.dim-q p{font-size:13px;color:var(--ink-2);}
+
+.opts{
+  display:grid;
+  grid-template-columns:repeat(5, minmax(0,1fr));
+  gap:8px;
+}
+.opt{
+  padding:12px 8px;
+  border:1px solid var(--line);
+  border-radius:10px;
+  background:#fff;
+  text-align:center;
+  transition:all .16s ease;
+  min-height:70px;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  gap:3px;
+}
+.opt:hover{border-color:var(--matcha);transform:translateY(-2px);}
+.opt b{font-size:12px;font-weight:500;color:var(--ink);line-height:1.4;}
+.opt span{font-size:10px;color:var(--ink-3);line-height:1.35;}
+.opt.on{background:var(--matcha);border-color:var(--matcha);}
+.opt.on b{color:#fff;}
+.opt.on span{color:rgba(255,255,255,.78);}
+
+/* --- 整体印象 --- */
+.rate-box{
+  padding:26px;
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  box-shadow:var(--shadow);
+}
+.stars{display:flex;gap:8px;}
+.star{
+  width:34px;height:34px;
+  color:#E3DACA;
+  transition:transform .16s ease, color .16s ease;
+}
+.star svg{width:100%;height:100%;display:block;}
+.star:hover{transform:translateY(-2px) scale(1.06);}
+.star.on{color:var(--matcha);}
+.rate-note{
+  width:100%;
+  margin-top:16px;
+  padding:14px 16px;
+  border:1px solid var(--line);
+  border-radius:12px;
+  background:#fff;
+  resize:vertical;
+  min-height:70px;
+  line-height:1.7;
+  outline:none;
+  transition:border-color .18s ease;
+}
+.rate-note:focus{border-color:var(--matcha);}
+.rate-note::placeholder{color:#BFB4A3;}
+
+/* --- 实时预览条 --- */
+.preview-bar{
+  display:flex;
+  align-items:center;
+  gap:18px;
+  margin-top:22px;
+  padding:18px;
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+}
+.preview-radar{flex:none;width:150px;}
+.preview-radar svg{width:100%;height:auto;display:block;overflow:visible;}
+.preview-info{flex:1;min-width:0;}
+.preview-info .label{font-size:10px;letter-spacing:.24em;color:var(--ink-3);}
+.preview-count{
+  font-family:var(--serif);
+  font-size:26px;
+  font-weight:600;
+  line-height:1.3;
+}
+.tag-cloud{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;}
+.cloud-tag{
+  padding:3px 10px;
+  border-radius:999px;
+  font-size:12px;
+  color:#4A4034;
+  background:var(--tone);
+  animation:pop .22s ease both;
+}
+@keyframes pop{
+  from{opacity:0;transform:scale(.86);}
+  to{opacity:1;transform:none;}
+}
+.empty-hint{font-size:12px;color:var(--ink-3);line-height:1.6;}
+
+/* --- 生成按钮 --- */
+.submit-row{
+  display:flex;
+  justify-content:center;
+  margin-top:32px;
+}
+.btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  padding:14px 36px;
+  border-radius:999px;
+  font-size:14px;
+  letter-spacing:.1em;
+  transition:transform .18s ease, background .18s ease, box-shadow .18s ease;
+}
+.btn-primary{background:var(--matcha);color:#fff;box-shadow:0 6px 18px rgba(125,155,122,.28);}
+.btn-primary:hover{background:var(--matcha-deep);transform:translateY(-2px);}
+.btn-ghost{border:1px solid var(--line);color:var(--ink-2);background:transparent;}
+.btn-ghost:hover{border-color:var(--matcha);color:var(--matcha-deep);}
+
+/* ============ 结果页 ============ */
+.result{max-width:660px;margin:0 auto;}
+.result-hero{text-align:center;}
+.score-line{
+  display:flex;
+  align-items:baseline;
+  justify-content:center;
+  gap:6px;
+  margin-top:4px;
+}
+.score-num{
+  font-family:var(--serif);
+  font-size:76px;
+  line-height:1;
+  font-weight:600;
+  letter-spacing:.02em;
+  color:var(--matcha-deep);
+}
+.score-unit{font-size:14px;color:var(--ink-3);}
+.score-label{
+  display:inline-block;
+  margin-top:12px;
+  padding:5px 16px;
+  border-radius:999px;
+  background:var(--matcha-soft);
+  color:var(--matcha-deep);
+  font-size:12px;
+  letter-spacing:.14em;
+}
+.result-coffee{
+  font-family:var(--serif);
+  font-size:26px;
+  font-weight:600;
+  margin-top:22px;
+  letter-spacing:.03em;
+}
+.result-meta{font-size:12px;color:var(--ink-3);margin-top:2px;}
+
+/* 品鉴短文 */
+.tasting-card{
+  position:relative;
+  margin-top:26px;
+  padding:30px 28px;
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  box-shadow:var(--shadow);
+}
+.tasting-card::before{
+  content:"”";
+  position:absolute;
+  top:6px;left:20px;
+  font-family:var(--serif);
+  font-size:52px;
+  color:var(--matcha-soft);
+  line-height:1;
+}
+.tasting-label{
+  font-size:10px;
+  letter-spacing:.28em;
+  color:var(--ink-3);
+  margin-bottom:12px;
+  padding-left:2px;
+}
+.tasting-text{
+  font-family:var(--serif);
+  font-size:16px;
+  line-height:2.1;
+  letter-spacing:.04em;
+  color:var(--ink);
+  text-align:justify;
+}
+
+/* 分项 */
+.dims-card{
+  margin-top:18px;
+  padding:22px 24px;
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+}
+.dim-row{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:7px 0;
+}
+.dim-row .k{font-size:12px;color:var(--ink-2);width:72px;flex:none;}
+.bar{
+  flex:1;
+  height:5px;
+  border-radius:999px;
+  background:var(--paper-2);
+  overflow:hidden;
+}
+.bar i{
+  display:block;
+  height:100%;
+  border-radius:999px;
+  background:var(--matcha);
+  transition:width .5s ease;
+}
+.dim-row .v{
+  font-size:12px;
+  color:var(--ink-2);
+  width:46px;
+  text-align:right;
+  flex:none;
+  font-variant-numeric:tabular-nums;
+}
+
+.result-extra{
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  justify-content:center;
+  gap:32px;
+  margin-top:18px;
+}
+.result-radar{width:260px;flex:none;}
+.result-radar svg{width:100%;height:auto;display:block;overflow:visible;}
+.result-tags{display:flex;flex-wrap:wrap;gap:6px;max-width:380px;}
+
+.result-actions{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:28px;}
+
+/* ============ 手帖（历史） ============ */
+.record-list{display:flex;flex-direction:column;gap:12px;margin-top:28px;}
+.record{
+  display:flex;
+  align-items:flex-start;
+  gap:18px;
+  padding:20px;
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:14px;
+  box-shadow:var(--shadow);
+  transition:border-color .2s ease, transform .2s ease;
+}
+.record:hover{border-color:#D8CDBB;transform:translateX(3px);}
+.record-score{
+  font-family:var(--serif);
+  font-size:28px;
+  font-weight:600;
+  color:var(--matcha-deep);
+  min-width:52px;
+  line-height:1.1;
+  flex:none;
+}
+.record-main{flex:1;min-width:0;}
+.record-main h3{font-family:var(--serif);font-size:16px;font-weight:600;letter-spacing:.03em;}
+.record-main .meta{font-size:12px;color:var(--ink-3);margin-top:2px;}
+.record-text{
+  font-size:12.5px;
+  color:var(--ink-2);
+  line-height:1.75;
+  margin-top:8px;
+  display:-webkit-box;
+  -webkit-line-clamp:2;
+  -webkit-box-orient:vertical;
+  overflow:hidden;
+}
+.record-tags{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px;}
+.record-del{
+  font-size:12px;
+  color:var(--ink-3);
+  padding:6px 10px;
+  border-radius:999px;
+  flex:none;
+  transition:background .18s ease, color .18s ease;
+}
+.record-del:hover{background:#FBEDE9;color:#B4655A;}
+
+.empty-state{
+  margin-top:40px;
+  padding:56px 24px;
+  text-align:center;
+  border:1px dashed #D9CEBB;
+  border-radius:var(--radius);
+  color:var(--ink-3);
+  font-size:14px;
+  line-height:2;
+}
+
+/* ============ 浮层 ============ */
+.overlay{
+  position:fixed;
+  inset:0;
+  z-index:60;
+  display:grid;
+  place-items:center;
+  padding:24px;
+  background:rgba(58,48,36,.36);
+  backdrop-filter:blur(4px);
+  animation:fadeIn .2s ease both;
+}
+@keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
+.overlay[hidden]{display:none;}
+
+.modal,.share-modal{
+  width:100%;
+  max-width:400px;
+  max-height:88vh;
+  overflow:auto;
+  background:var(--card);
+  border-radius:20px;
+  padding:26px;
+  box-shadow:0 24px 60px rgba(58,48,36,.24);
+  animation:pop .26s ease both;
+}
+.share-modal{max-width:430px;text-align:center;}
+.share-modal img{width:100%;border-radius:12px;display:block;margin:16px 0 18px;}
+.share-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  font-family:var(--serif);
+  font-size:16px;
+  letter-spacing:.06em;
+}
+.close{font-size:20px;color:var(--ink-3);line-height:1;padding:0 4px;}
+.close:hover{color:var(--ink);}
+
+.modal h3{font-family:var(--serif);font-size:20px;font-weight:600;letter-spacing:.04em;margin-bottom:20px;}
+.field{display:block;margin-bottom:14px;}
+.field span{display:block;font-size:11px;letter-spacing:.18em;color:var(--ink-3);margin-bottom:6px;text-transform:uppercase;}
+.field input{
+  width:100%;
+  padding:11px 14px;
+  border:1px solid var(--line);
+  border-radius:10px;
+  background:#fff;
+  outline:none;
+  transition:border-color .18s ease;
+}
+.field input:focus{border-color:var(--matcha);}
+.modal-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:22px;}
+.modal-actions .btn{padding:11px 22px;}
+
+/* ============ 页脚 ============ */
+.foot{
+  padding:26px 0 34px;
+  border-top:1px solid var(--line);
+  text-align:center;
+  font-size:11px;
+  letter-spacing:.16em;
+  color:var(--ink-3);
+}
+
+/* toast */
+.toast{
+  position:fixed;
+  left:50%;
+  bottom:38px;
+  transform:translateX(-50%);
+  z-index:80;
+  padding:11px 22px;
+  border-radius:999px;
+  background:rgba(59,52,44,.92);
+  color:#FBF7EF;
+  font-size:13px;
+  letter-spacing:.08em;
+  animation:toastIn .26s ease both;
+}
+@keyframes toastIn{
+  from{opacity:0;transform:translate(-50%,10px);}
+  to{opacity:1;transform:translate(-50%,0);}
+}
+
+/* ============ 响应式 ============ */
+@media (max-width:860px){
+  .opts{grid-template-columns:repeat(3, minmax(0,1fr));}
+  .opts .opt:nth-child(4),
+  .opts .opt:nth-child(5){grid-column:span 1;}
+}
+@media (max-width:640px){
+  .page{padding:0 18px;}
+  main{padding:30px 0 56px;}
+  h2.title{font-size:24px;}
+  .taste-head h2{font-size:26px;}
+  .grid{grid-template-columns:1fr 1fr;gap:12px;}
+  .bean-card{padding:16px 14px;}
+  .bean-card h3{font-size:17px;}
+  .bean-note{font-size:12px;min-height:58px;}
+  .fam-hint{display:none;}
+  .opts{grid-template-columns:repeat(2, minmax(0,1fr));}
+  .opt{min-height:60px;}
+  .preview-bar{flex-direction:column;align-items:stretch;}
+  .preview-radar{width:100%;max-width:180px;margin:0 auto;}
+  .score-num{font-size:62px;}
+  .tasting-card{padding:24px 20px;}
+  .tasting-text{font-size:15px;line-height:2;}
+  .result-extra{justify-content:center;}
+  .record{gap:12px;padding:16px;}
+  .record-score{font-size:24px;min-width:44px;}
+  .brand-text em{display:none;}
+}
+</style>
+</head>
+<body>
+<div class="page">
+  <header class="topbar">
+    <a class="brand" href="#" data-nav="home">
+      <span class="mark">珈</span>
+      <span class="brand-text">
+        <strong>珈琲手帖</strong>
+        <em>Coffee Notes</em>
+      </span>
+    </a>
+    <nav class="nav">
+      <button class="nav-btn" data-nav="home">选一杯</button>
+      <button class="nav-btn" data-nav="history">我的手帖</button>
+    </nav>
+  </header>
+
+  <main id="app"></main>
+
+  <footer class="foot">一杯咖啡，一段手帖 · 风味体系参考 SCA 咖啡风味轮</footer>
+</div>
+
+<div class="overlay" id="overlay" hidden></div>
+
+<script>
+/* =====================================================
+ *  SCA 九大风味族（三层：族 → 分组 → 具体风味词）
+ * ===================================================== */
+const FLAVORS = [
+  {
+    key:'floral', name:'花香', short:'花香', en:'Floral', color:'#E0A6B2',
+    hint:'像花店、花茶的味道',
+    groups:[
+      { name:'花香', words:['茉莉','玫瑰','洋甘菊','橙花','紫罗兰'] },
+      { name:'茶香', words:['红茶','绿茶','乌龙茶'] }
+    ]
+  },
+  {
+    key:'fruity', name:'果味', short:'果味', en:'Fruity', color:'#E2A163',
+    hint:'水果的酸甜香气',
+    groups:[
+      { name:'柑橘', words:['柠檬','橙子','葡萄柚','青柠'] },
+      { name:'莓果', words:['草莓','蓝莓','覆盆子','黑加仑'] },
+      { name:'核果', words:['桃子','杏子','樱桃'] },
+      { name:'热带水果', words:['菠萝','百香果','芒果'] },
+      { name:'干果', words:['葡萄干','无花果','西梅'] },
+      { name:'其他水果', words:['苹果','梨','葡萄'] }
+    ]
+  },
+  {
+    key:'sour', name:'酸与发酵', short:'酸酵', en:'Sour / Fermented', color:'#C8AD5E',
+    hint:'果酸、酒香或发酵的味道',
+    groups:[
+      { name:'酸质', words:['柠檬酸','苹果酸','醋酸'] },
+      { name:'发酵', words:['葡萄酒','啤酒','发酵果香'] },
+      { name:'酒精', words:['朗姆酒','白兰地'] }
+    ]
+  },
+  {
+    key:'green', name:'绿色植物', short:'青植', en:'Green / Vegetative', color:'#93AB7C',
+    hint:'青草、蔬菜、生豆的青涩味',
+    groups:[
+      { name:'生青', words:['青草','生豆','豌豆'] },
+      { name:'植物', words:['草本','干草','黄瓜'] },
+      { name:'油脂', words:['橄榄油','坚果油'] }
+    ]
+  },
+  {
+    key:'roasted', name:'烘焙', short:'烘焙', en:'Roasted', color:'#94867A',
+    hint:'烟熏、焦香、麦芽的味道',
+    groups:[
+      { name:'谷物', words:['麦芽','烤面包','谷物'] },
+      { name:'焦香', words:['焦香','炭焙','焦糖化'] },
+      { name:'烟熏', words:['烟熏','烟草','木炭'] }
+    ]
+  },
+  {
+    key:'spices', name:'香料', short:'香料', en:'Spices', color:'#C08C7B',
+    hint:'肉桂、丁香、胡椒这类香气',
+    groups:[
+      { name:'棕色香料', words:['肉桂','丁香','肉豆蔻','茴香'] },
+      { name:'胡椒', words:['黑胡椒','白胡椒'] },
+      { name:'辛辣', words:['姜','辛辣'] }
+    ]
+  },
+  {
+    key:'nutty', name:'坚果可可', short:'坚果', en:'Nutty / Cocoa', color:'#B08A66',
+    hint:'坚果、巧克力、奶油的味道',
+    groups:[
+      { name:'坚果', words:['杏仁','榛果','花生','核桃'] },
+      { name:'可可', words:['牛奶巧克力','黑巧克力','可可粉'] }
+    ]
+  },
+  {
+    key:'sweet', name:'甜味', short:'甜感', en:'Sweet', color:'#DDBE73',
+    hint:'焦糖、蜂蜜、糖的甜香',
+    groups:[
+      { name:'红糖', words:['焦糖','红糖','糖蜜','枫糖'] },
+      { name:'香草', words:['香草','奶油'] },
+      { name:'甜香', words:['蜂蜜','花蜜'] }
+    ]
+  },
+  {
+    key:'other', name:'其他', short:'其他', en:'Other', color:'#A99E92',
+    hint:'纸味、霉味等不太像咖啡的味道',
+    groups:[
+      { name:'纸质', words:['纸板','纸浆'] },
+      { name:'霉味', words:['霉味','潮湿'] },
+      { name:'化学', words:['橡胶','药剂'] }
+    ]
+  }
+];
+
+/* =====================================================
+ *  口感选择题（小白语言）
+ * ===================================================== */
+const DIMENSIONS = [
+  {
+    key:'acidity', name:'酸感', question:'第一口下去，酸的感觉有多明显？',
+    options:[
+      { v:1, label:'几乎喝不出酸', hint:'温吞、平顺' },
+      { v:2, label:'有一点点', hint:'像熟透的水果' },
+      { v:3, label:'清爽的酸', hint:'像咬了口青苹果' },
+      { v:4, label:'明亮活泼', hint:'像挤了半颗柠檬' },
+      { v:5, label:'酸得很抢眼', hint:'尖锐、直接' }
+    ]
+  },
+  {
+    key:'bitterness', name:'苦感', question:'苦味大概到什么程度？',
+    options:[
+      { v:1, label:'几乎没有', hint:'像白水' },
+      { v:2, label:'淡淡的苦', hint:'像淡茶' },
+      { v:3, label:'适中的苦', hint:'像黑巧克力' },
+      { v:4, label:'明显的苦', hint:'像浓茶' },
+      { v:5, label:'苦得很重', hint:'带一点药感' }
+    ]
+  },
+  {
+    key:'body', name:'醇厚度', question:'在嘴里的重量感，更像下面哪一个？',
+    options:[
+      { v:1, label:'轻薄', hint:'像水' },
+      { v:2, label:'清爽', hint:'像清茶' },
+      { v:3, label:'适中', hint:'像牛奶' },
+      { v:4, label:'圆润', hint:'像奶油' },
+      { v:5, label:'厚重', hint:'像糖浆' }
+    ]
+  },
+  {
+    key:'aftertaste', name:'余韵', question:'咽下去之后，味道能留多久？',
+    options:[
+      { v:1, label:'几乎没有', hint:'一下就没了' },
+      { v:2, label:'很短', hint:'一两秒' },
+      { v:3, label:'停一会儿', hint:'几秒到十几秒' },
+      { v:4, label:'悠长', hint:'久久不散' },
+      { v:5, label:'非常持久', hint:'一直在回甘' }
+    ]
+  },
+  {
+    key:'sweetness', name:'甜感', question:'能尝到多少甜味？',
+    options:[
+      { v:1, label:'几乎不甜', hint:'干爽' },
+      { v:2, label:'很淡', hint:'只在尾段一闪' },
+      { v:3, label:'清晰', hint:'像淡蜂蜜水' },
+      { v:4, label:'饱满', hint:'像化开的红糖' },
+      { v:5, label:'很甜', hint:'像焦糖布丁' }
+    ]
+  },
+  {
+    key:'clean', name:'干净度', question:'杯子里有没有杂味、涩感或不太舒服的味道？',
+    options:[
+      { v:1, label:'杂味偏多', hint:'喝着有点乱' },
+      { v:2, label:'偶尔有一点', hint:'尾段有杂感' },
+      { v:3, label:'尚可', hint:'没有明显缺陷' },
+      { v:4, label:'干净', hint:'没有多余杂味' },
+      { v:5, label:'异常干净', hint:'轮廓清晰利落' }
+    ]
+  }
+];
+
+/* =====================================================
+ *  内置饮品库
+ * ===================================================== */
+const COFFEES = [
+  { id:'c1', name:'冰美式', en:'Iced Americano', type:'黑咖啡', tone:'#8C7A64',
+    note:'浓缩加冰水，干净利落，尾韵带一点回甘。', hints:['烘焙','坚果可可'] },
+  { id:'c2', name:'拿铁', en:'Caffè Latte', type:'奶咖', tone:'#C0A17F',
+    note:'浓缩与蒸汽牛奶，口感绵密，甜感被奶香托起。', hints:['甜味','坚果可可'] },
+  { id:'c3', name:'澳白', en:'Flat White', type:'奶咖', tone:'#B99B78',
+    note:'双份浓缩配薄奶泡，奶香更集中，质地更稠。', hints:['坚果可可','甜味'] },
+  { id:'c4', name:'卡布奇诺', en:'Cappuccino', type:'奶咖', tone:'#C7A98A',
+    note:'浓缩、牛奶与奶泡各占三分之一，泡沫蓬松。', hints:['甜味','烘焙'] },
+  { id:'c5', name:'冷萃', en:'Cold Brew', type:'冷萃黑咖', tone:'#82705C',
+    note:'低温长时萃取，酸度低，甜感厚，像一颗化开的黑糖。', hints:['甜味','坚果可可'] },
+  { id:'c6', name:'手冲 耶加雪菲', en:'Yirgacheffe', type:'单品手冲', tone:'#D2A55E',
+    note:'埃塞俄比亚水洗·浅烘，柑橘酸质明亮，尾段浮起白花。', hints:['花香','果味'] },
+  { id:'c7', name:'手冲 曼特宁', en:'Mandheling', type:'单品手冲', tone:'#6E5B4A',
+    note:'苏门答腊深烘，草本与黑巧，醇厚且余韵悠长。', hints:['坚果可可','香料','烘焙'] },
+  { id:'c8', name:'桂花拿铁', en:'Osmanthus Latte', type:'风味奶咖', tone:'#D9B36B',
+    note:'桂花糖浆遇上拿铁，香气甜润，像初秋的巷口。', hints:['花香','甜味'] }
+];
+
+const STORAGE_KEY = 'coffeeNotesHistory';
+
+/* =====================================================
+ *  状态
+ * ===================================================== */
+const state = {
+  view: 'home',
+  coffee: null,
+  selected: {},   // { floral: ['茉莉'], ... }
+  dims: {},       // { acidity: 3, ... }
+  rating: 0,
+  note: '',
+  result: null
+};
+
+function resetTasting(){
+  state.selected = {};
+  FLAVORS.forEach(f => { state.selected[f.key] = []; });
+  state.dims = {};
+  DIMENSIONS.forEach(d => { state.dims[d.key] = 0; });
+  state.rating = 0;
+  state.note = '';
+  state.result = null;
+}
+
+/* =====================================================
+ *  工具函数
+ * ===================================================== */
+function esc(str){
+  return String(str).replace(/[&<>"']/g, c => ({
+    '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+  })[c]);
+}
+
+function today(){
+  const d = new Date();
+  return d.getFullYear() + '.' + String(d.getMonth()+1).padStart(2,'0') + '.' + String(d.getDate()).padStart(2,'0');
+}
+
+function clamp(n, min, max){ return Math.min(max, Math.max(min, n)); }
+function round1(n){ return Math.round(n * 10) / 10; }
+
+function joinCn(arr){
+  if (!arr.length) return '';
+  if (arr.length === 1) return arr[0];
+  return arr.slice(0, -1).join('、') + '与' + arr[arr.length - 1];
+}
+
+function loadHistory(){
+  try{ return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); }catch(e){ return []; }
+}
+function saveHistory(list){
+  try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(list)); }catch(e){ /* 忽略隐私模式写入失败 */ }
+}
+
+function toast(msg){
+  const el = document.createElement('div');
+  el.className = 'toast';
+  el.textContent = msg;
+  document.body.appendChild(el);
+  setTimeout(() => {
+    el.style.transition = 'opacity .3s ease';
+    el.style.opacity = '0';
+    setTimeout(() => el.remove(), 320);
+  }, 1600);
+}
+
+/* =====================================================
+ *  风味数据装配
+ * ===================================================== */
+function buildFamData(){
+  return FLAVORS.map(f => {
+    const allWords = f.groups.flatMap(g => g.words);
+    const picked = state.selected[f.key] || [];
+    // 按词库顺序排列，保证文案与标签稳定
+    const ordered = allWords.filter(w => picked.includes(w));
+    return { ...f, picked: ordered, count: ordered.length };
+  });
+}
+
+/* =====================================================
+ *  评分（5 分制）
+ * ===================================================== */
+function computeScore(){
+  const fams = buildFamData();
+  const positive = fams.filter(f => f.key !== 'other');
+  const totalWords = positive.reduce((s, f) => s + f.count, 0);
+  const famCount = positive.filter(f => f.count > 0).length;
+  const defectCount = (fams.find(f => f.key === 'other') || { count:0 }).count;
+
+  // 风味层次：词量 + 覆盖面，缺陷风味扣分
+  let flavor = 1.8 + Math.min(totalWords, 10) / 10 * 2.2 + Math.min(famCount, 5) * 0.14;
+  flavor = clamp(flavor - defectCount * 0.5, 1, 5);
+
+  const acid = state.dims.acidity || 3;
+  const bitter = state.dims.bitterness || 3;
+  const balance = clamp(5 - Math.abs(acid - 3) * 0.75 - Math.abs(bitter - 3) * 0.75, 1, 5);
+
+  const sweetness = state.dims.sweetness || 3;
+  const after = state.dims.aftertaste || 3;
+  const clean = clamp((state.dims.clean || 3) - defectCount * 0.6, 1, 5);
+  const overall = state.rating || 3;
+
+  const total = flavor * 0.25 + balance * 0.15 + sweetness * 0.10 + after * 0.15 + clean * 0.15 + overall * 0.20;
+
+  return {
+    total: round1(clamp(total, 1, 5)),
+    flavor: round1(flavor),
+    balance: round1(balance),
+    sweetness: round1(sweetness),
+    after: round1(after),
+    clean: round1(clean),
+    overall: round1(overall),
+    totalWords,
+    famCount,
+    defectCount,
+    fams
+  };
+}
+
+function gradeOf(score){
+  if (score >= 4.5) return { label:'值得专程', desc:'风味完整、层次分明，是会记住的一杯' };
+  if (score >= 4.0) return { label:'值得再点', desc:'完成度很高，风味有记忆点' };
+  if (score >= 3.5) return { label:'日常好喝', desc:'平衡顺口，适合作为日常的一杯' };
+  if (score >= 3.0) return { label:'中规中矩', desc:'没有明显短板，也没有太多惊喜' };
+  return { label:'再换一杯', desc:'这一杯偏平淡，下一杯或许更好' };
+}
+
+/* =====================================================
+ *  品鉴文案生成
+ * ===================================================== */
+const ACID_TEXT = {
+  1:'入口几乎感受不到酸，温吞平顺',
+  2:'入口柔和，酸度只在舌侧轻轻掠过',
+  3:'入口酸质清爽，像咬了一口青苹果',
+  4:'入口酸质明亮，像挤了半颗柠檬',
+  5:'入口酸度相当抢眼，尖锐而直接'
+};
+const BODY_TEXT = {
+  1:'质地轻薄，像一杯温水',
+  2:'质地轻盈，接近清茶',
+  3:'醇厚度适中，像一杯温牛奶',
+  4:'口感圆润饱满，接近奶油',
+  5:'质地厚重，像糖浆一样裹住舌根'
+};
+const AFTER_TEXT = {
+  1:'咽下后几乎没留下什么',
+  2:'余韵很短，一瞬就散了',
+  3:'余韵停留了一小会儿',
+  4:'余韵悠长，回甘慢慢爬上来',
+  5:'余韵非常持久，喝完很久嘴里还是甜的'
+};
+const CLEAN_TEXT = {
+  1:'杯子里杂味偏多，干净度欠佳',
+  2:'整体还算干净，尾段偶有杂感',
+  3:'干净度尚可，没有明显缺陷',
+  4:'干净通透，没有多余的杂味',
+  5:'异常干净，风味轮廓清晰利落'
+};
+const FINAL_TEXT = {
+  1:'整体偏平淡，换一支豆子或许更有惊喜。',
+  2:'整体中规中矩，某些风味还可以再展开。',
+  3:'整体均衡，适合作为日常的一杯。',
+  4:'整体平衡，是会想再点的一杯。',
+  5:'整体完成度很高，风味有记忆点，值得专程再来一杯。'
+};
+
+function generateTasting(){
+  const fams = buildFamData();
+  const w = key => (fams.find(f => f.key === key) || { picked: [] }).picked;
+  const d = key => state.dims[key] || 3;
+
+  const floral = w('floral').slice(0, 2);
+  const fruity = w('fruity').slice(0, 2);
+  const nutty = w('nutty').slice(0, 2);
+  const sweet = w('sweet').slice(0, 2);
+  const spices = w('spices').slice(0, 2);
+  const roasted = w('roasted').slice(0, 2);
+  const green = w('green').slice(0, 1);
+  const sour = w('sour').slice(0, 1);
+  const other = w('other').slice(0, 1);
+
+  const sentences = [];
+
+  // 1. 香气
+  const aroma = [];
+  if (floral.length) aroma.push(`${floral.join('、')}的花香`);
+  if (fruity.length) aroma.push(`${fruity.join('、')}的果香`);
+  if (sweet.length) aroma.push(`${sweet.join('、')}的甜香`);
+  if (spices.length) aroma.push(`${spices.join('、')}的辛香`);
+  if (roasted.length) aroma.push(`${roasted.join('、')}的焙火气`);
+
+  if (aroma.length === 1) {
+    sentences.push(`凑近杯口，最先浮出来的是${aroma[0]}。`);
+  } else if (aroma.length > 1) {
+    sentences.push(`凑近杯口，最先浮出来的是${aroma[0]}，接着是${joinCn(aroma.slice(1))}。`);
+  } else {
+    sentences.push('这支咖啡的香气比较收敛，要凑得很近才慢慢展开。');
+  }
+
+  // 2. 入口：酸 + 醇厚
+  sentences.push(`${ACID_TEXT[d('acidity')]}，${BODY_TEXT[d('body')]}。`);
+
+  // 3. 中段风味
+  const mid = [];
+  if (nutty.length) mid.push(`${nutty.join('、')}的坚果与可可调`);
+  if (sour.length) mid.push(`${sour.join('')}带来的活泼酸质`);
+  if (green.length) mid.push(`${green.join('')}的青涩底色`);
+  if (spices.length) mid.push(`${spices.join('、')}的尾段辛香`);
+  if (roasted.length) mid.push(`${roasted.join('、')}的焙火感`);
+
+  if (mid.length) {
+    const depth = mid.length >= 3 ? '层次相当丰富' : (mid.length === 2 ? '两层风味交替出现' : '线条干净');
+    sentences.push(`再往后，${joinCn(mid)}依次展开，${depth}。`);
+  }
+
+  // 4. 余韵 + 甜 + 干净度
+  let afterLine = AFTER_TEXT[d('aftertaste')];
+  if (d('sweetness') >= 4) afterLine += '，甜感饱满地挂在舌面';
+  else if (d('sweetness') === 3) afterLine += '，甜感清晰但不腻';
+  sentences.push(`${afterLine}，${CLEAN_TEXT[d('clean')]}。`);
+
+  // 5. 缺陷提示
+  if (other.length) {
+    sentences.push(`需要留意的是，杯中出现了${other.join('、')}一类的杂味，略微影响了整体表现。`);
+  }
+
+  // 6. 总评
+  if (state.rating) sentences.push(FINAL_TEXT[state.rating]);
+
+  return sentences.join('');
+}
+
+/* =====================================================
+ *  雷达图（SVG，9 轴）
+ * ===================================================== */
+function radarSVG(fams, size){
+  const w = size || 260;
+  const cx = w / 2, cy = w / 2, r = w * 0.28;
+  const n = fams.length;
+  const angles = fams.map((_, i) => -Math.PI / 2 + (i * 2 * Math.PI) / n);
+
+  const point = (i, ratio) => [
+    cx + Math.cos(angles[i]) * r * ratio,
+    cy + Math.sin(angles[i]) * r * ratio
+  ];
+
+  let grid = '';
+  [0.34, 0.67, 1].forEach(level => {
+    const pts = angles.map((_, i) => point(i, level).join(',')).join(' ');
+    grid += `<polygon points="${pts}" fill="none" stroke="${level === 1 ? '#DCD2BF' : '#EDE6D8'}" stroke-width="1"/>`;
+  });
+
+  let axes = '';
+  angles.forEach((_, i) => {
+    const [x, y] = point(i, 1);
+    axes += `<line x1="${cx}" y1="${cy}" x2="${x.toFixed(1)}" y2="${y.toFixed(1)}" stroke="#E8E0D2" stroke-width="1"/>`;
+  });
+
+  const maxCount = Math.max(...fams.map(f => f.count), 2);
+  const ratioOf = f => f.count === 0 ? 0.03 : clamp(0.30 + 0.70 * (f.count / maxCount), 0, 1);
+
+  const dataPts = fams.map((f, i) => point(i, ratioOf(f)).join(',')).join(' ');
+
+  let dots = '';
+  fams.forEach((f, i) => {
+    const [x, y] = point(i, ratioOf(f));
+    dots += `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${f.count ? 3.2 : 1.8}" fill="${f.count ? f.color : '#E3DACA'}"/>`;
+  });
+
+  let labels = '';
+  fams.forEach((f, i) => {
+    const lr = r + w * 0.085;
+    const x = cx + Math.cos(angles[i]) * lr;
+    const y = cy + Math.sin(angles[i]) * lr;
+    const cos = Math.cos(angles[i]);
+    const anchor = Math.abs(cos) < 0.22 ? 'middle' : (cos > 0 ? 'start' : 'end');
+    let dy = 0;
+    if (angles[i] < -1.5) dy = -2;
+    if (angles[i] > 1.5) dy = 9;
+    labels += `<text x="${x.toFixed(1)}" y="${(y + dy).toFixed(1)}" text-anchor="${anchor}"
+      font-size="10.5" fill="#6F665C" opacity="${f.count ? 1 : 0.42}"
+      style="letter-spacing:.04em">${esc(f.short)}</text>`;
+  });
+
+  return `<svg viewBox="0 0 ${w} ${w}" role="img" aria-label="风味雷达图">
+    ${grid}${axes}
+    <polygon points="${dataPts}" fill="rgba(125,155,122,.22)" stroke="#7D9B7A" stroke-width="1.5" stroke-linejoin="round"/>
+    ${dots}
+    ${labels}
+  </svg>`;
+}
+
+/* =====================================================
+ *  视图：首页
+ * ===================================================== */
+function homeView(){
+  const cards = COFFEES.map(c => {
+    const hints = c.hints.map(h => `<span class="mini-tag">${esc(h)}</span>`).join('');
+    return `<button class="bean-card" data-coffee="${c.id}" style="--tone:${c.tone}">
+      <div class="bean-top">
+        <span class="dot"></span>
+        <span class="bean-type">${esc(c.type)}</span>
+      </div>
+      <h3>${esc(c.name)}</h3>
+      <p class="bean-en">${esc(c.en)}</p>
+      <p class="bean-note">${esc(c.note)}</p>
+      <div class="bean-hints">${hints}</div>
+    </button>`;
+  }).join('');
+
+  return `<section class="view">
+    <div class="hero">
+      <p class="eyebrow">Coffee Notes</p>
+      <h2 class="title">不懂术语，<br/>也能写出一段像样的品鉴。</h2>
+      <p class="lede">选一杯咖啡，回答几道大白话的选择题。剩下的交给手帖——它会替你把感受，写成一段咖啡师口吻的品鉴。</p>
+      <div class="rule">BASED ON SCA FLAVOR WHEEL</div>
+    </div>
+    <div class="grid">
+      ${cards}
+      <button class="add-card" data-add>
+        <span>＋</span><span>添加一杯自己的咖啡</span>
+      </button>
+    </div>
+  </section>`;
+}
+
+/* =====================================================
+ *  视图：品鉴页
+ * ===================================================== */
+function tasteView(){
+  const c = state.coffee;
+  if (!c) return homeView();
+
+  const famBlocks = FLAVORS.map(f => {
+    const picked = state.selected[f.key] || [];
+    const groups = f.groups.map(g => {
+      const words = g.words.map(w => {
+        const on = picked.includes(w) ? ' on' : '';
+        return `<button class="word${on}" data-word="${esc(w)}" data-key="${f.key}" style="--tone:${f.color}">${esc(w)}</button>`;
+      }).join('');
+      return `<div class="group">
+        <div class="group-name">${esc(g.name)}</div>
+        <div class="group-words">${words}</div>
+      </div>`;
+    }).join('');
+
+    return `<div class="fam${picked.length ? ' has' : ''}" data-fam="${f.key}" style="--tone:${f.color}">
+      <button class="fam-head" data-toggle-fam="${f.key}">
+        <span class="swatch"></span>
+        <span class="fam-title">
+          <span class="fam-name">${esc(f.name)}</span>
+          <span class="fam-en">${esc(f.en)}</span>
+        </span>
+        <span class="fam-hint">${esc(f.hint)}</span>
+        <span class="fam-badge">${picked.length}</span>
+        <span class="arrow">▼</span>
+      </button>
+      <div class="fam-body">${groups}</div>
+    </div>`;
+  }).join('');
+
+  const dimBlocks = DIMENSIONS.map(dim => {
+    const current = state.dims[dim.key] || 0;
+    const opts = dim.options.map(o => {
+      const on = current === o.v ? ' on' : '';
+      return `<button class="opt${on}" data-dim="${dim.key}" data-val="${o.v}">
+        <b>${esc(o.label)}</b><span>${esc(o.hint)}</span>
+      </button>`;
+    }).join('');
+    return `<div class="dim">
+      <div class="dim-q">
+        <span class="dim-name">${esc(dim.name)}</span>
+        <p>${esc(dim.question)}</p>
+      </div>
+      <div class="opts">${opts}</div>
+    </div>`;
+  }).join('');
+
+  const hints = c.hints.map(h => `<span class="mini-tag">${esc(h)}</span>`).join('');
+
+  return `<section class="view">
+    <button class="back" data-nav="home">← 换一杯</button>
+
+    <div class="taste-head">
+      <p class="eyebrow">Now Tasting</p>
+      <h2>${esc(c.name)}</h2>
+      <p class="meta">${esc(c.type)} · ${esc(c.en)}</p>
+      <p class="meta" style="margin-top:8px">${esc(c.note)}</p>
+      ${hints ? `<div class="hint-row"><span class="label">可能的风味</span>${hints}</div>` : ''}
+    </div>
+
+    <div class="step-head">
+      <span class="step-no">01</span>
+      <div class="step-body">
+        <h3>闻起来像什么？</h3>
+        <p>不用管专业名字，觉得像就点。可以选很多个，也可以一个都不选。</p>
+      </div>
+    </div>
+    <div class="palette">${famBlocks}</div>
+
+    <div class="step-head">
+      <span class="step-no">02</span>
+      <div class="step-body">
+        <h3>喝起来怎么样？</h3>
+        <p>六道题，凭第一感觉选就好，没有标准答案。</p>
+      </div>
+    </div>
+    <div class="dims">${dimBlocks}</div>
+
+    <div class="step-head">
+      <span class="step-no">03</span>
+      <div class="step-body">
+        <h3>最后，给它一个整体印象</h3>
+        <p>抛开所有细节，这杯咖啡你愿意给几星？</p>
+      </div>
+    </div>
+    <div class="rate-box">
+      <div class="stars" id="stars">
+        ${[1,2,3,4,5].map(i => `
+          <button class="star" data-star="${i}" aria-label="${i} 星">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.6l2.9 5.9 6.5.9-4.7 4.6 1.1 6.5-5.8-3.1-5.8 3.1 1.1-6.5L2.6 9.4l6.5-.9z"/></svg>
+          </button>`).join('')}
+      </div>
+      <textarea class="rate-note" id="rateNote" placeholder="想补一句自己的话吗？比如：下雨天喝的，意外地舒服。"></textarea>
+    </div>
+
+    <div class="preview-bar">
+      <div class="preview-radar" id="radarWrap">${radarSVG(buildFamData(), 150)}</div>
+      <div class="preview-info">
+        <div class="label">FLAVOR PROFILE</div>
+        <div class="preview-count" id="pickCount">已选 0 个风味</div>
+        <div class="tag-cloud" id="tagCloud">
+          <p class="empty-hint">还没有选风味，从上面挑几个词试试。</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="submit-row">
+      <button class="btn btn-primary" id="finishBtn">生成我的品鉴</button>
+    </div>
+  </section>`;
+}
+
+/* =====================================================
+ *  视图：结果页
+ * ===================================================== */
+function resultView(){
+  const r = state.result;
+  if (!r) return homeView();
+  const grade = gradeOf(r.total);
+  const coffee = state.coffee;
+
+  const tags = r.fams.flatMap(f =>
+    f.picked.map(w => `<span class="cloud-tag" style="--tone:${f.color}">${esc(w)}</span>`)
+  ).join('');
+
+  const dimRows = [
+    { k:'风味层次', v: r.flavor },
+    { k:'平衡感', v: r.balance },
+    { k:'甜感', v: r.sweetness },
+    { k:'余韵', v: r.after },
+    { k:'干净度', v: r.clean },
+    { k:'整体印象', v: r.overall }
+  ].map(row => `<div class="dim-row">
+      <span class="k">${row.k}</span>
+      <div class="bar"><i style="width:${(row.v / 5) * 100}%"></i></div>
+      <span class="v">${row.v.toFixed(1)}</span>
+    </div>`).join('');
+
+  return `<section class="view result">
+    <div class="result-hero">
+      <p class="eyebrow">Tasting Complete</p>
+      <div class="score-line">
+        <span class="score-num">${r.total.toFixed(1)}</span>
+        <span class="score-unit">/ 5.0</span>
+      </div>
+      <span class="score-label">${esc(grade.label)}</span>
+      <h3 class="result-coffee">${esc(coffee.name)}</h3>
+      <p class="result-meta">${esc(coffee.type)} · ${today()}</p>
+    </div>
+
+    <div class="tasting-card">
+      <div class="tasting-label">TASTING NOTE</div>
+      <p class="tasting-text">${esc(r.tasting)}</p>
+    </div>
+
+    <div class="dims-card">${dimRows}</div>
+
+    <div class="result-extra">
+      <div class="result-radar">${radarSVG(r.fams, 220)}</div>
+      <div class="result-tags">${tags || '<span class="empty-hint">这一杯没有选风味</span>'}</div>
+    </div>
+
+    ${state.note ? `<p class="tasting-text" style="font-size:14px;color:var(--ink-2);margin-top:18px;text-align:left">「${esc(state.note)}」</p>` : ''}
+
+    <div class="result-actions">
+      <button class="btn btn-primary" id="saveBtn">收进手帖</button>
+      <button class="btn btn-ghost" id="shareBtn">生成分享卡片</button>
+      <button class="btn btn-ghost" data-nav="home">再评一杯</button>
+    </div>
+  </section>`;
+}
+
+/* =====================================================
+ *  视图：手帖（历史）
+ * ===================================================== */
+function historyView(){
+  const list = loadHistory();
+
+  if (!list.length){
+    return `<section class="view">
+      <p class="eyebrow">My Notes</p>
+      <h2 class="title">我的手帖</h2>
+      <div class="empty-state">手帖还是空白的。<br/>去选一杯咖啡，让手帖替你写第一段品鉴吧。</div>
+      <div style="text-align:center;margin-top:24px">
+        <button class="btn btn-primary" data-nav="home">去选一杯</button>
+      </div>
+    </section>`;
+  }
+
+  const items = list.map(item => {
+    const tags = item.tags.slice(0, 5).map(t =>
+      `<span class="mini-tag">${esc(t.word)}</span>`
+    ).join('');
+    return `<article class="record">
+      <div class="record-score">${item.score.toFixed(1)}</div>
+      <div class="record-main">
+        <h3>${esc(item.name)}</h3>
+        <p class="meta">${esc(item.date)} · ${esc(item.type)} · ${esc(item.grade)}</p>
+        <p class="record-text">${esc(item.tasting)}</p>
+        <div class="record-tags">${tags}</div>
+      </div>
+      <button class="record-del" data-del="${item.id}">删除</button>
+    </article>`;
+  }).join('');
+
+  return `<section class="view">
+    <p class="eyebrow">My Notes</p>
+    <h2 class="title">我的手帖</h2>
+    <p class="lede">一共记录 ${list.length} 杯咖啡。</p>
+    <div class="record-list">${items}</div>
+  </section>`;
+}
+
+/* =====================================================
+ *  渲染
+ * ===================================================== */
+const app = document.getElementById('app');
+const overlay = document.getElementById('overlay');
+
+function render(){
+  if (state.view === 'home') app.innerHTML = homeView();
+  else if (state.view === 'taste') app.innerHTML = tasteView();
+  else if (state.view === 'result') app.innerHTML = resultView();
+  else if (state.view === 'history') app.innerHTML = historyView();
+
+  document.querySelectorAll('.nav-btn').forEach(btn => {
+    const target = btn.dataset.nav;
+    btn.classList.toggle('active',
+      (target === 'home' && state.view !== 'history') ||
+      (target === 'history' && state.view === 'history')
+    );
+  });
+
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function startTasting(coffee){
+  state.coffee = coffee;
+  resetTasting();
+  state.view = 'taste';
+  render();
+
+  // 默认展开第一个有参考风味的族，降低首次操作门槛
+  if (coffee.hints && coffee.hints.length){
+    const first = FLAVORS.find(f => f.name === coffee.hints[0]);
+    if (first){
+      const el = document.querySelector(`.fam[data-fam="${first.key}"]`);
+      if (el) el.classList.add('open');
+    }
+  }
+}
+
+/* =====================================================
+ *  实时预览
+ * ===================================================== */
+function updatePreview(){
+  const fams = buildFamData();
+  const total = fams.reduce((s, f) => s + f.count, 0);
+
+  const countEl = document.getElementById('pickCount');
+  if (countEl) countEl.textContent = `已选 ${total} 个风味`;
+
+  const radarWrap = document.getElementById('radarWrap');
+  if (radarWrap) radarWrap.innerHTML = radarSVG(fams, 150);
+
+  const cloud = document.getElementById('tagCloud');
+  if (cloud){
+    const tags = fams.flatMap(f => f.picked.map(w => ({ word: w, color: f.color })));
+    cloud.innerHTML = tags.length
+      ? tags.map(t => `<span class="cloud-tag" style="--tone:${t.color}">${esc(t.word)}</span>`).join('')
+      : '<p class="empty-hint">还没有选风味，从上面挑几个词试试。</p>';
+  }
+}
+
+/* =====================================================
+ *  分享卡片（Canvas）
+ * ===================================================== */
+function buildShareCanvas(record){
+  const W = 640, H = 920, dpr = 2;
+  const canvas = document.createElement('canvas');
+  canvas.width = W * dpr;
+  canvas.height = H * dpr;
+  const ctx = canvas.getContext('2d');
+  ctx.scale(dpr, dpr);
+
+  ctx.fillStyle = '#FAF7F0';
+  ctx.fillRect(0, 0, W, H);
+
+  ctx.strokeStyle = '#DED4C2';
+  ctx.lineWidth = 1;
+  ctx.strokeRect(26.5, 26.5, W - 53, H - 53);
+
+  ctx.textAlign = 'center';
+
+  ctx.fillStyle = '#A79C8E';
+  ctx.font = '12px "PingFang SC", sans-serif';
+  ctx.fillText('珈 琲 手 帖   ·   C O F F E E   N O T E S', W / 2, 76);
+
+  ctx.beginPath();
+  ctx.moveTo(W / 2 - 34, 94);
+  ctx.lineTo(W / 2 + 34, 94);
+  ctx.strokeStyle = '#E0D7C6';
+  ctx.stroke();
+
+  ctx.fillStyle = '#3B342C';
+  ctx.font = '600 34px "Songti SC", "STSong", "SimSun", serif';
+  ctx.fillText(record.name, W / 2, 150);
+
+  ctx.fillStyle = '#A79C8E';
+  ctx.font = '12px "PingFang SC", sans-serif';
+  ctx.fillText(record.type + '   ·   ' + record.date, W / 2, 176);
+
+  ctx.fillStyle = '#5C7A59';
+  ctx.font = '600 68px "Songti SC", "STSong", "SimSun", serif';
+  ctx.fillText(record.score.toFixed(1), W / 2, 250);
+
+  ctx.font = '12px "PingFang SC", sans-serif';
+  ctx.fillStyle = '#A79C8E';
+  ctx.fillText('/ 5.0', W / 2, 272);
+
+  const gradeText = record.grade;
+  ctx.font = '13px "PingFang SC", sans-serif';
+  const gw = ctx.measureText(gradeText).width + 36;
+  roundRect(ctx, W / 2 - gw / 2, 288, gw, 30, 15);
+  ctx.fillStyle = '#EDF2E8';
+  ctx.fill();
+  ctx.fillStyle = '#5C7A59';
+  ctx.fillText(gradeText, W / 2, 308);
+
+  // 品鉴短文
+  ctx.fillStyle = '#3B342C';
+  ctx.font = '15px "Songti SC", "STSong", "SimSun", serif';
+  ctx.textAlign = 'left';
+  const maxW = W - 140;
+  const lines = wrapText(ctx, record.tasting, maxW);
+  const shown = lines.slice(0, 6);
+  const truncated = lines.length > shown.length;
+  let ty = 366;
+  shown.forEach((line, i) => {
+    let text = line;
+    if (i === shown.length - 1 && truncated){
+      text = text.replace(/[，。、；：]$/, '') + '…';
+    }
+    ctx.fillText(text, 60, ty);
+    ty += 30;
+  });
+
+  // 雷达
+  const radarTop = Math.max(ty + 20, 512);
+  drawCanvasRadar(ctx, W / 2, radarTop + 96, 96, record.famData);
+  ctx.textAlign = 'center';
+
+  // 标签
+  const tags = record.tags.slice(0, 6);
+  if (tags.length){
+    ctx.font = '12px "PingFang SC", sans-serif';
+    const gap = 8, padX = 14, h = 28;
+    const tagY = radarTop + 236;
+    const widths = tags.map(t => ctx.measureText(t.word).width + padX * 2);
+    const totalW = widths.reduce((s, w) => s + w, 0) + gap * (tags.length - 1);
+    let x = W / 2 - Math.min(totalW, 460) / 2;
+    if (totalW > 460){
+      // 超宽时只画前几个
+      const visible = [];
+      let acc = 0;
+      for (let i = 0; i < tags.length; i++){
+        if (acc + widths[i] > 460) break;
+        visible.push(i);
+        acc += widths[i] + gap;
+      }
+      x = W / 2 - (acc - gap) / 2;
+      visible.forEach(i => {
+        roundRect(ctx, x, tagY, widths[i], h, 14);
+        ctx.fillStyle = tags[i].color;
+        ctx.globalAlpha = .85;
+        ctx.fill();
+        ctx.globalAlpha = 1;
+        ctx.fillStyle = '#43392D';
+        ctx.fillText(tags[i].word, x + widths[i] / 2, tagY + 19);
+        x += widths[i] + gap;
+      });
+    } else {
+      tags.forEach((t, i) => {
+        roundRect(ctx, x, tagY, widths[i], h, 14);
+        ctx.fillStyle = t.color;
+        ctx.globalAlpha = .85;
+        ctx.fill();
+        ctx.globalAlpha = 1;
+        ctx.fillStyle = '#43392D';
+        ctx.fillText(t.word, x + widths[i] / 2, tagY + 19);
+        x += widths[i] + gap;
+      });
+    }
+  }
+
+  ctx.fillStyle = '#B9AE9E';
+  ctx.font = '11px "PingFang SC", sans-serif';
+  ctx.fillText('风味体系参考 SCA 咖啡风味轮 · 珈琲手帖', W / 2, H - 52);
+
+  return canvas;
+}
+
+function wrapText(ctx, text, maxWidth){
+  // 优先在句末标点处换行，避免把一个词拆到两行
+  const sentences = text.match(/[^。！？；]+[。！？；]?/g) || [text];
+  const lines = [];
+
+  // 避头尾：标点不落在行首
+  const NO_LINE_START = '，。、；：！？）」』…';
+  const breakByChar = (str) => {
+    let buf = '';
+    for (const ch of str){
+      const full = ctx.measureText(buf + ch).width > maxWidth;
+      if (full && buf && !NO_LINE_START.includes(ch)){
+        lines.push(buf);
+        buf = ch;
+      } else {
+        buf += ch;
+      }
+    }
+    return buf;
+  };
+
+  let current = '';
+  sentences.forEach(s => {
+    if (!current){
+      current = ctx.measureText(s).width <= maxWidth ? s : breakByChar(s);
+      return;
+    }
+    if (ctx.measureText(current + s).width <= maxWidth){
+      current += s;
+    } else {
+      lines.push(current);
+      current = ctx.measureText(s).width <= maxWidth ? s : breakByChar(s);
+    }
+  });
+  if (current) lines.push(current);
+  return lines;
+}
+
+function roundRect(ctx, x, y, w, h, r){
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.arcTo(x + w, y, x + w, y + h, r);
+  ctx.arcTo(x + w, y + h, x, y + h, r);
+  ctx.arcTo(x, y + h, x, y, r);
+  ctx.arcTo(x, y, x + w, y, r);
+  ctx.closePath();
+}
+
+function drawCanvasRadar(ctx, cx, cy, r, fams){
+  const n = fams.length;
+  const angles = fams.map((_, i) => -Math.PI / 2 + (i * 2 * Math.PI) / n);
+  const maxCount = Math.max(...fams.map(f => f.count), 2);
+
+  const pt = (i, ratio) => [
+    cx + Math.cos(angles[i]) * r * ratio,
+    cy + Math.sin(angles[i]) * r * ratio
+  ];
+
+  [0.34, 0.67, 1].forEach(level => {
+    ctx.beginPath();
+    angles.forEach((_, i) => {
+      const [x, y] = pt(i, level);
+      i ? ctx.lineTo(x, y) : ctx.moveTo(x, y);
+    });
+    ctx.closePath();
+    ctx.strokeStyle = level === 1 ? '#DCD2BF' : '#ECE5D7';
+    ctx.lineWidth = 1;
+    ctx.stroke();
+  });
+
+  angles.forEach((_, i) => {
+    const [x, y] = pt(i, 1);
+    ctx.beginPath();
+    ctx.moveTo(cx, cy);
+    ctx.lineTo(x, y);
+    ctx.strokeStyle = '#E8E0D2';
+    ctx.stroke();
+  });
+
+  const ratioOf = f => f.count === 0 ? 0.03 : clamp(0.30 + 0.70 * (f.count / maxCount), 0, 1);
+
+  ctx.beginPath();
+  fams.forEach((f, i) => {
+    const [x, y] = pt(i, ratioOf(f));
+    i ? ctx.lineTo(x, y) : ctx.moveTo(x, y);
+  });
+  ctx.closePath();
+  ctx.fillStyle = 'rgba(125,155,122,.20)';
+  ctx.fill();
+  ctx.strokeStyle = '#7D9B7A';
+  ctx.lineWidth = 1.5;
+  ctx.stroke();
+
+  ctx.font = '11px "PingFang SC", sans-serif';
+  fams.forEach((f, i) => {
+    const [x, y] = pt(i, ratioOf(f));
+    ctx.beginPath();
+    ctx.arc(x, y, f.count ? 3.2 : 1.8, 0, Math.PI * 2);
+    ctx.fillStyle = f.count ? f.color : '#E3DACA';
+    ctx.fill();
+
+    const lr = r + 20;
+    const lx = cx + Math.cos(angles[i]) * lr;
+    const ly = cy + Math.sin(angles[i]) * lr;
+    ctx.fillStyle = f.count ? '#6F665C' : '#BDB2A2';
+    ctx.textAlign = Math.abs(Math.cos(angles[i])) < 0.22 ? 'center' : (Math.cos(angles[i]) > 0 ? 'left' : 'right');
+    ctx.fillText(f.short, lx, ly + 4);
+  });
+  ctx.textAlign = 'center';
+}
+
+function openShare(record){
+  const canvas = buildShareCanvas(record);
+  const dataUrl = canvas.toDataURL('image/png');
+
+  overlay.innerHTML = `<div class="share-modal">
+    <div class="share-head">
+      <span>分享卡片</span>
+      <button class="close" data-close>×</button>
+    </div>
+    <img src="${dataUrl}" alt="咖啡品鉴分享卡片" />
+    <a class="btn btn-primary" href="${dataUrl}" download="coffee-note-${encodeURIComponent(record.name)}.png" style="width:100%">保存图片</a>
+  </div>`;
+  overlay.hidden = false;
+}
+
+/* =====================================================
+ *  添加自定义咖啡
+ * ===================================================== */
+function openAddModal(){
+  overlay.innerHTML = `<div class="modal">
+    <h3>添加一杯</h3>
+    <label class="field"><span>咖啡名称</span>
+      <input id="addName" placeholder="例如：楼下便利店的冰美式" maxlength="20" />
+    </label>
+    <label class="field"><span>类型</span>
+      <input id="addType" placeholder="例如：奶咖 / 单品手冲" maxlength="12" />
+    </label>
+    <label class="field"><span>一句描述</span>
+      <input id="addNote" placeholder="选填，比如：今天的冰块化得有点快" maxlength="40" />
+    </label>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" data-close>取消</button>
+      <button class="btn btn-primary" id="addConfirm">开始品鉴</button>
+    </div>
+  </div>`;
+  overlay.hidden = false;
+  setTimeout(() => document.getElementById('addName')?.focus(), 60);
+}
+
+/* =====================================================
+ *  事件绑定
+ * ===================================================== */
+document.addEventListener('click', (e) => {
+  const t = e.target;
+
+  // 导航
+  const nav = t.closest('[data-nav]');
+  if (nav){
+    e.preventDefault();
+    const target = nav.dataset.nav;
+    if (target === 'home'){
+      state.coffee = null;
+      state.result = null;
+    }
+    state.view = target;
+    render();
+    return;
+  }
+
+  // 选咖啡
+  const card = t.closest('[data-coffee]');
+  if (card){
+    const coffee = COFFEES.find(c => c.id === card.dataset.coffee);
+    if (coffee) startTasting(coffee);
+    return;
+  }
+
+  // 添加自定义
+  if (t.closest('[data-add]')){
+    openAddModal();
+    return;
+  }
+
+  // 展开风味族
+  const famHead = t.closest('[data-toggle-fam]');
+  if (famHead){
+    famHead.closest('.fam').classList.toggle('open');
+    return;
+  }
+
+  // 选风味词
+  const word = t.closest('[data-word]');
+  if (word){
+    const key = word.dataset.key;
+    const value = word.dataset.word;
+    const arr = state.selected[key];
+    const idx = arr.indexOf(value);
+    if (idx > -1) arr.splice(idx, 1);
+    else arr.push(value);
+
+    word.classList.toggle('on', idx === -1);
+
+    const famEl = document.querySelector(`.fam[data-fam="${key}"]`);
+    if (famEl){
+      const badge = famEl.querySelector('.fam-badge');
+      if (badge) badge.textContent = arr.length;
+      famEl.classList.toggle('has', arr.length > 0);
+    }
+    updatePreview();
+    return;
+  }
+
+  // 选择口感档位
+  const opt = t.closest('[data-dim]');
+  if (opt){
+    const key = opt.dataset.dim;
+    const val = Number(opt.dataset.val);
+    state.dims[key] = val;
+    opt.parentElement.querySelectorAll('.opt').forEach(el => {
+      el.classList.toggle('on', Number(el.dataset.val) === val);
+    });
+    return;
+  }
+
+  // 星级
+  const star = t.closest('[data-star]');
+  if (star){
+    const value = Number(star.dataset.star);
+    state.rating = state.rating === value ? 0 : value;
+    document.querySelectorAll('.star').forEach(s => {
+      s.classList.toggle('on', Number(s.dataset.star) <= state.rating);
+    });
+    return;
+  }
+
+  // 生成品鉴
+  if (t.id === 'finishBtn'){
+    const noteEl = document.getElementById('rateNote');
+    state.note = noteEl ? noteEl.value.trim() : '';
+
+    const result = computeScore();
+    if (result.totalWords === 0 && !state.rating){
+      toast('先选几个风味，或给个整体印象吧');
+      return;
+    }
+    result.tasting = generateTasting();
+    state.result = result;
+    state.view = 'result';
+    render();
+    return;
+  }
+
+  // 收进手帖
+  if (t.id === 'saveBtn'){
+    const r = state.result;
+    const grade = gradeOf(r.total);
+    const record = {
+      id: Date.now(),
+      name: state.coffee.name,
+      type: state.coffee.type,
+      score: r.total,
+      grade: grade.label,
+      date: today(),
+      note: state.note,
+      tasting: r.tasting,
+      tags: r.fams.flatMap(f => f.picked.map(w => ({ word: w, color: f.color })))
+    };
+    const list = loadHistory();
+    list.unshift(record);
+    saveHistory(list.slice(0, 100));
+    toast('已收进手帖');
+    return;
+  }
+
+  // 分享卡片
+  if (t.id === 'shareBtn'){
+    const r = state.result;
+    const grade = gradeOf(r.total);
+    openShare({
+      name: state.coffee.name,
+      type: state.coffee.type,
+      score: r.total,
+      grade: grade.label,
+      date: today(),
+      tasting: r.tasting,
+      tags: r.fams.flatMap(f => f.picked.map(w => ({ word: w, color: f.color }))),
+      famData: r.fams
+    });
+    return;
+  }
+
+  // 删除记录
+  const del = t.closest('[data-del]');
+  if (del){
+    const id = Number(del.dataset.del);
+    saveHistory(loadHistory().filter(item => item.id !== id));
+    render();
+    toast('已删除');
+    return;
+  }
+
+  // 关闭浮层
+  if (t.closest('[data-close]') || t === overlay){
+    overlay.hidden = true;
+    overlay.innerHTML = '';
+    return;
+  }
+
+  // 确认添加
+  if (t.id === 'addConfirm'){
+    const name = document.getElementById('addName').value.trim();
+    const type = document.getElementById('addType').value.trim() || '自定义';
+    const note = document.getElementById('addNote').value.trim();
+    if (!name){
+      toast('给它起个名字吧');
+      return;
+    }
+    overlay.hidden = true;
+    overlay.innerHTML = '';
+    startTasting({
+      id: 'custom-' + Date.now(),
+      name,
+      en: 'My Cup',
+      type,
+      tone: '#9C8B7D',
+      note: note || '我自己的这一杯。',
+      hints: []
+    });
+    return;
+  }
+});
+
+/* =====================================================
+ *  演示深链接：?shot=home|taste|dims|result|history
+ *  仅用于演示与截图，正常访问不受影响
+ * ===================================================== */
+function applyDemoShot(){
+  const shot = new URLSearchParams(location.search).get('shot');
+  if (!shot || shot === 'home') return false;
+
+  if (shot === 'history'){
+    saveHistory([
+      { id: 3, name:'手冲 耶加雪菲', type:'单品手冲', score:4.2, grade:'值得再点', date:'2026.10.21',
+        note:'', tasting:'凑近杯口，最先浮出来的是茉莉、橙花的花香，接着是柠檬、橙子的果香。入口酸质明亮，像挤了半颗柠檬，醇厚度轻盈，接近清茶。余韵悠长，回甘慢慢爬上来，干净通透，没有多余的杂味。整体完成度很高，风味有记忆点。',
+        tags:[{word:'茉莉',color:'#E0A6B2'},{word:'橙花',color:'#E0A6B2'},{word:'柠檬',color:'#E2A163'},{word:'蜂蜜',color:'#DDBE73'}] },
+      { id: 2, name:'冷萃', type:'冷萃黑咖', score:3.7, grade:'日常好喝', date:'2026.10.18',
+        note:'', tasting:'这支咖啡的香气比较收敛，要凑得很近才慢慢展开。入口几乎感受不到酸，温吞平顺，质地厚重，像糖浆一样裹住舌根。再往后，焦糖与黑巧克力的坚果与可可调依次展开，线条干净。余韵停留了一小会儿，甜感清晰但不腻，干净度尚可。',
+        tags:[{word:'焦糖',color:'#DDBE73'},{word:'黑巧克力',color:'#B08A66'},{word:'黑糖',color:'#DDBE73'}] },
+      { id: 1, name:'拿铁', type:'奶咖', score:3.5, grade:'日常好喝', date:'2026.10.15',
+        note:'', tasting:'凑近杯口，最先浮出来的是焦糖的甜香。入口柔和，酸度只在舌侧轻轻掠过，醇厚度适中，像一杯温牛奶。再往后，牛奶巧克力与榛果的坚果与可可调依次展开，线条干净。余韵停留了一小会儿，干净通透，没有多余的杂味。',
+        tags:[{word:'焦糖',color:'#DDBE73'},{word:'牛奶巧克力',color:'#B08A66'},{word:'榛果',color:'#B08A66'}] }
+    ]);
+    state.view = 'history';
+    render();
+    return true;
+  }
+
+  const coffee = COFFEES.find(c => c.id === 'c6') || COFFEES[0];
+  state.coffee = coffee;
+  resetTasting();
+
+  const picks = {
+    floral: ['茉莉','橙花'],
+    fruity: ['柠檬','橙子'],
+    sweet: ['蜂蜜'],
+    nutty: ['杏仁'],
+    roasted: ['麦芽']
+  };
+  Object.keys(picks).forEach(k => { state.selected[k] = picks[k]; });
+
+  state.dims = { acidity:4, bitterness:3, body:3, aftertaste:4, sweetness:3, clean:4 };
+  state.rating = 5;
+  state.note = '下雨天喝的，意外地舒服。';
+
+  if (shot === 'result'){
+    const r = computeScore();
+    r.tasting = generateTasting();
+    state.result = r;
+    state.view = 'result';
+    render();
+    return true;
+  }
+
+  state.view = 'taste';
+  render();
+
+  const floralEl = document.querySelector('.fam[data-fam="floral"]');
+  if (floralEl) floralEl.classList.add('open');
+
+  if (shot === 'dims'){
+    requestAnimationFrame(() => {
+      const dimsEl = document.querySelector('.dims');
+      const head = dimsEl ? dimsEl.previousElementSibling : null;
+      if (head) window.scrollTo({ top: head.offsetTop - 96, behavior: 'auto' });
+    });
+  }
+  return true;
+}
+
+/* =====================================================
+ *  启动
+ * ===================================================== */
+resetTasting();
+if (!applyDemoShot()) render();
+</script>
+</body>
+</html>
